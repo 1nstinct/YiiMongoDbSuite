@@ -134,6 +134,34 @@ abstract class EMongoEmbeddedDocument extends CModel
 		else
 			parent::__set($name, $value);
 	}
+	
+	/**
+	 * Sets the attribute values in a massive way.
+	 * @param array $values attribute values (name=>value) to be set.
+	 * @param boolean $safeOnly whether the assignments should only be done to the safe attributes.
+	 * A safe attribute is one that is associated with a validation rule in the current {@link scenario}.
+	 * @see getSafeAttributeNames
+	 * @see attributeNames
+	 */
+	public function setAttributes($values,$safeOnly=true)
+	{
+		if(!is_array($values))
+			return;
+		$attributes=array_flip($safeOnly ? $this->getSafeAttributeNames() : $this->attributeNames());
+		$hasEmbedded = $this->hasEmbeddedDocuments();
+		foreach($values as $name=>$value)
+		{
+			if(isset($attributes[$name])) {
+				if ($hasEmbedded && $this->_embedded->contains($name)) {
+					$this->$name->setAttributes($value, $safeOnly);
+				} else {
+					$this->$name=$value;
+				}
+			}
+			else if($safeOnly)
+				$this->onUnsafeAttribute($name,$value);
+		}
+	}
 
 	public function afterValidate()
 	{
