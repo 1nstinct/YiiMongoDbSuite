@@ -132,6 +132,18 @@ abstract class EMongoDocument extends EMongoEmbeddedDocument
 	}
 
 	/**
+	 * Return the MongoDbRef for this object
+	 * @return array the MongoDbRef structure are returned by
+	 *         MongoDbRef::create or null, if the current
+	 *         object has not been saved yet
+	 */
+	public function getDbRef() {
+		if ($this->_new) return null;
+
+		return MongoDBRef::create($this->getCollectionName(), $this->_id);
+	}
+
+	/**
 	 * Get EMongoDB component instance
 	 * By default it is mongodb application component
 	 *
