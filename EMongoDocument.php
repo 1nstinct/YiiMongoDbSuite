@@ -922,6 +922,24 @@ abstract class EMongoDocument extends EMongoEmbeddedDocument
 	}
 
 	/**
+	 * Finds document by the given DbRef.
+	 * @param  primary key value(s). Use array for multiple primary keys. For composite key, each key value must be an array (column name=>column value).
+	 * @return the document found. An null is returned if none is found.
+	 */
+	public function findByDbRef($ref)
+	{
+		Yii::trace(get_class($this).'.findByDbRef()','ext.MongoDb.EMongoDocument');
+
+		if (!isset($ref['$ref']) || !isset($ref['$id']) || $ref['$ref'] != $this->getCollectionName()) {
+			throw new EMongoException(Yii::t('yii', 'Invalid or incompatible MongoDbRef supplied for findByDbRef)'));
+		}
+
+		$criteria = new EMongoCriteria(array('_id' => array('==' => $ref['$id'])));
+
+		return $this->find($criteria);
+	}
+
+	/**
 	 * Counts all documents satisfying the specified condition.
 	 * See {@link find()} for detailed explanation about $condition and $params.
 	 * @param array|EMongoCriteria $condition query criteria.
