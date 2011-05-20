@@ -81,9 +81,9 @@ class EEmbeddedArraysBehavior extends EMongoDocumentBehavior
 
 	/**
 	 * Event: initialize array of embded documents
-	 * @since v1.0
+	 * @since v1.3.6.x
 	 */
-	public function afterEmbeddedDocsInit($event)
+	public function afterSetAttributes($event)
 	{
 		$this->parseExistingArray();
 	}
@@ -102,15 +102,6 @@ class EEmbeddedArraysBehavior extends EMongoDocumentBehavior
 				$obj->setAttributes($doc, false);
 				$obj->setOwner($this->getOwner());
 
-				// If any EEmbeddedArraysBehavior is attached,
-				// then we should trigger parsing of the newly set
-				// attributes
-				foreach (array_keys($obj->behaviors()) as $name) {
-					$behavior = $obj->asa($name);
-					if ($behavior instanceof EEmbeddedArraysBehavior) {
-						$behavior->parseExistingArray();
-					}
-				}
 				$arrayOfDocs[] = $obj;
 			}
 			$this->getOwner()->{$this->arrayPropertyName} = $arrayOfDocs;
