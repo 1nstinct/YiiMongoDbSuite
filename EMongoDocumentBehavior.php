@@ -25,7 +25,8 @@ class EMongoDocumentBehavior extends CActiveRecordBehavior
 			'onBeforeEmbeddedDocsInit'=>'beforeEmbeddedDocsInit',
 			'onAfterEmbeddedDocsInit'=>'afterEmbeddedDocsInit',
 			'onBeforeToArray'=>'beforeToArray',
-			'onAfterToArray'=>'afterToArray'
+			'onAfterToArray'=>'afterToArray',
+			'onAfterSetAttributes'=>'afterSetAttributes',
 		));
 	}
 
@@ -33,4 +34,5 @@ class EMongoDocumentBehavior extends CActiveRecordBehavior
 	public function afterEmbeddedDocsInit($event){}
 	public function beforeToArray($event){}
 	public function afterToArray($event){}
+	public function afterSetAttributes($event){}
 }

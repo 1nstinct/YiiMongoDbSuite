@@ -116,6 +116,14 @@ abstract class EMongoEmbeddedDocument extends CModel
 	}
 
 	/**
+	 * @since v1.3.6.x
+	 */
+	public function onAfterSetAttributes($event)
+	{
+		$this->raiseEvent('onAfterSetAttributes', $event);
+	}
+
+	/**
 	 * @since v1.0.8
 	 */
 	protected function beforeToArray()
@@ -131,6 +139,14 @@ abstract class EMongoEmbeddedDocument extends CModel
 	protected function afterToArray()
 	{
 		$this->onAfterToArray(new CModelEvent($this));
+	}
+
+	/**
+	 * @since v1.3.6.x
+	 */
+	protected function afterSetAttributes()
+	{
+		$this->onAfterSetAttributes(new CModelEvent($this));
 	}
 
 	/**
@@ -205,6 +221,21 @@ abstract class EMongoEmbeddedDocument extends CModel
 		}
 		else
 			return parent::__isset($name);
+	}
+	
+	/**
+	 * Sets the attribute values in a massive way.
+	 * We will raise an afterSetAttributes event for behaviors
+	 * @param array $values attribute values (name=>value) to be set.
+	 * @param boolean $safeOnly whether the assignments should only be done to the safe attributes.
+	 * A safe attribute is one that is associated with a validation rule in the current {@link scenario}.
+	 * @see getSafeAttributeNames
+	 * @see attributeNames
+	 */
+	public function setAttributes($values,$safeOnly=true)
+	{
+		parent::setAttributes($values,$safeOnly);
+		$this->afterSetAttributes();
 	}
 
 	/**
