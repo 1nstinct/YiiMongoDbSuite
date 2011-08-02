@@ -45,21 +45,13 @@ class EEmbeddedArraysBehavior extends EMongoDocumentBehavior
 	private $_embeddedOwner;
 
 	public function events() {
-		if (!$this->_embeddedOwner) {
-			return parent::events();
-		}
-		else {
-			// If attached to an embedded document these events are not defined
-			// and would throw an error if attached to
-			$events = parent::events();
-			unset($events['onBeforeSave']);
-			unset($events['onAfterSave']);
-			unset($events['onBeforeDelete']);
-			unset($events['onAfterDelete']);
-			unset($events['onBeforeFind']);
-			unset($events['onAfterFind']);
-			return $events;
-		}
+                return array (
+                  // enable these for even see below 
+                  'onAfterToArray'              => 'afterToArray',
+                  'onAfterSetAttributes'        => 'afterSetAttributes',
+                  'onAfterValidate'             => 'afterValidate',
+                  'onBeforeToArray'             => 'beforeToArray', 
+                );
 	}
 
 	/**
