@@ -220,6 +220,7 @@ abstract class EMongoEmbeddedDocument extends CModel
 					$this->addErrors($doc->getErrors());
 				}
 			}
+		parent::afterValidate();
 	}
 
 	/**
