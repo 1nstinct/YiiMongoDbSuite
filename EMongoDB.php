@@ -135,15 +135,10 @@ class EMongoDB extends CApplicationComponent
 				if(empty($this->connectionString))
 					throw new EMongoException(Yii::t('yii', 'EMongoDB.connectionString cannot be empty.'));
 
-				if($this->persistentConnection !== false)
-					$this->_mongoConnection = new Mongo($this->connectionString, array(
-						'connect'=>$this->autoConnect,
-						'persist'=>$this->persistentConnection
-					));
-				else
-					$this->_mongoConnection = new Mongo($this->connectionString, array(
-						'connect'=>$this->autoConnect,
-					));
+				// all connections are now persistent
+				$this->_mongoConnection = new MongoClient($this->connectionString, array(
+					'connect'=>$this->autoConnect,
+				));
 
 				return $this->_mongoConnection;
 			}
