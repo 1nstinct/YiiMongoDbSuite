@@ -298,6 +298,10 @@ abstract class EMongoGridFS extends EMongoDocument
 			return false;
 	}
 
+	public function getUploadTimestamp() {
+		return $this->_gridFSFile->file['uploadDate']->sec;
+	}
+
 	/**
 	 * Writes this file to the system
 	 * @param string $filename The location to which to write the file. If none is given, the stored filename will be used.

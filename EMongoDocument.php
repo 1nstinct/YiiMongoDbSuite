@@ -611,7 +611,7 @@ abstract class EMongoDocument extends EMongoEmbeddedDocument
 			if(version_compare(Mongo::VERSION, '1.0.5','>=') === true)
 				$result = $this->getCollection()->insert($rawData, array(
 					'fsync'	=> $this->getFsyncFlag(),
-					'safe'	=> $this->getSafeFlag()
+					'w'=>$this->getSafeFlag()
 				));
 			else
 				$result = $this->getCollection()->insert($rawData, CPropertyValue::ensureBoolean($this->getSafeFlag()));
@@ -661,7 +661,7 @@ abstract class EMongoDocument extends EMongoEmbeddedDocument
 
 				foreach($rawData as $key=>$value)
 				{
-					if(!in_array($key, $attributes))
+					if(!in_array($key, $attributes) && !in_array($key, array('updated_at')) )
 						unset($rawData[$key]);
 				}
 			}
@@ -675,7 +675,7 @@ abstract class EMongoDocument extends EMongoEmbeddedDocument
 					array('$set' => $rawData),
 					array(
 						'fsync'=>$this->getFsyncFlag(),
-						'safe'=>$this->getSafeFlag(),
+						'w'=>$this->getSafeFlag(),
 						'multiple'=>false
 					)
 				);
@@ -683,7 +683,7 @@ abstract class EMongoDocument extends EMongoEmbeddedDocument
 				if(version_compare(Mongo::VERSION, '1.0.5','>=') === true)
 					$result = $this->getCollection()->save($rawData, array(
 						'fsync'=>$this->getFsyncFlag(),
-						'safe'=>$this->getSafeFlag()
+						'w'=>$this->getSafeFlag()
 					));
 				else
 					$result = $this->getCollection()->save($rawData);
@@ -715,7 +715,7 @@ abstract class EMongoDocument extends EMongoEmbeddedDocument
 			if(version_compare(Mongo::VERSION, '1.0.5','>=') === true)
 				$result = $this->getCollection()->update($criteria->getConditions(), $modifier->getModifiers(), array(
 					'fsync'=>$this->getFsyncFlag(),
-					'safe'=>$this->getSafeFlag(),
+					'w'=>$this->getSafeFlag(),
 					'upsert'=>false,
 					'multiple'=>true
 				));
@@ -777,7 +777,7 @@ abstract class EMongoDocument extends EMongoEmbeddedDocument
 			$result = $this->getCollection()->remove($criteria->getConditions(), array(
 				'justOne'=>true,
 				'fsync'=>$this->getFsyncFlag(),
-				'safe'=>$this->getSafeFlag()
+				'w'=>$this->getSafeFlag()
 			));
 		else
 			$result = $this->getCollection()->remove($criteria->getConditions(), true);
@@ -992,7 +992,7 @@ abstract class EMongoDocument extends EMongoEmbeddedDocument
 			return $this->getCollection()->remove($criteria->getConditions(), array(
 				'justOne'=>false,
 				'fsync'=>$this->getFsyncFlag(),
-				'safe'=>$this->getSafeFlag()
+				'w'=>$this->getSafeFlag()
 			));
 		else
 			return $this->getCollection()->remove($criteria->getConditions(), false);
